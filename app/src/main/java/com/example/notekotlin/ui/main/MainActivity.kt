@@ -18,11 +18,11 @@ class MainActivity : AppCompatActivity() {
 
         setSupportActionBar(toolbar)//Не забудьте поменять в Стилях приложения
                 //тему на Resources.Theme.AppCompat.Light.NoActionBar
-        viewModel = ViewModelProviders.of( this ). get (MainViewModel:: class.java )
+        viewModel = ViewModelProviders.of(this).get(MainViewModel:: class.java)
         adapter = MainAdapter()
         mainRecycler.adapter = adapter
-        viewModel.viewState().observe( this , Observer<MainViewState> { t ->
-            t?.let { adapter.notes = it.notes }
+        viewModel.viewState().observe(this, Observer<MainViewState> {t ->
+            t?.let {adapter.notes = it.notes}
         })
 
     }
