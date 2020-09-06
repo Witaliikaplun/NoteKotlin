@@ -7,9 +7,10 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.notekotlin.R
 import com.example.notekotlin.data.model.Note
+import com.example.notekotlin.data.model.Note.Color
 
-class MainAdapter : RecyclerView.Adapter<NoteViewHolder>() {
-    var notes: List<Note> = listOf() //не понятно как попадают данные в List notes из вне!
+class MainAdapter(private val onItemClickListener: OnItemClickListener) : RecyclerView.Adapter<MainAdapter.NoteViewHolder>() {
+    var notes: List<Note> = listOf() 
         set(value) {
             field = value
             notifyDataSetChanged() //уведомляет список об изменении данных для обновления списка на экране
@@ -26,14 +27,30 @@ class MainAdapter : RecyclerView.Adapter<NoteViewHolder>() {
     override fun onBindViewHolder(holder: NoteViewHolder, position: Int): Unit {
         holder.bind(notes[position])
     }
-}
 
-class NoteViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-    private val title = itemView.findViewById<TextView>(R.id.title)
-    private val body = itemView.findViewById<TextView>(R.id.body)
-    fun bind(note: Note) {
-        title.text = note.title
-        body.text = note.note
-        itemView.setBackgroundColor(note.color)
+    inner class NoteViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        private val title = itemView.findViewById<TextView>(R.id.title)
+        private val body = itemView.findViewById<TextView>(R.id.body)
+        fun bind(note: Note) {
+            title.text = note.title
+            body.text = note.note
+            val color = when (note.color) {
+                Color.WHITE -> R.color.color_white
+                Color.VIOLET -> R.color.color_violet
+                Color.YELLOW -> R.color.color_yello
+                Color.RED -> R.color.color_red
+                Color.PINK -> R.color.color_pink
+                Color.GREEN -> R.color.color_green
+                Color.BLUE -> R.color.color_blue
+            }
+            itemView.setBackgroundColor(itemView.context.resources.getColor(color))
+            itemView.setOnClickListener { onItemClickListener.onItemClick(note) }
+        }
+    }
+    interface OnItemClickListener{
+        fun onItemClick(note: Note)
     }
 }
+
+
+
