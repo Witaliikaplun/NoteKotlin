@@ -79,14 +79,19 @@ class NoteActivity : AppCompatActivity() {
     }
 
     private fun triggerSaveNote () {
-        if (titleEt.text == null || titleEt.text!!.length < 3) return
+        if (titleEt.text!!.length < 3 ) return
         Handler().postDelayed( object : Runnable {
             override fun run () {
                 note = note?.copy(title = titleEt.text.toString(),
                         note = bodyEt.text.toString(),
                         lastChanged = Date())
-                if (note != null) viewModel.saveChanges(note!!)
+                        ?: createNewNote()
+                if (note != null ) viewModel.saveChanges(note!!)
             }
         }, SAVE_DELAY)
     }
+
+    private fun createNewNote(): Note = Note(UUID.randomUUID().toString(),
+            titleEt.text.toString(),
+            bodyEt.text.toString())
 }

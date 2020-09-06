@@ -32,8 +32,8 @@ class MainActivity : AppCompatActivity() {
             t?.let {adapter.notes = it.notes}
         })
 
-
-    }
+        fab.setOnClickListener { openNoteScreen(null) }
+}
     private fun openNoteScreen(note: Note?){
         val intent = NoteActivity.getStartIntent(this, note)
         startActivity(intent)
