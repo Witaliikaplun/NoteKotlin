@@ -63,8 +63,7 @@ class NoteActivity : AppCompatActivity() {
         if (note != null) {
             titleEt.setText(note?.title ?: "")
             bodyEt.setText(note?.note ?: "")
-            titleEt.addTextChangedListener(textChangeListener)
-            bodyEt.addTextChangedListener(textChangeListener)
+
             val color = when (note!!.color) {
                 Note.Color.WHITE -> R.color.color_white
                 Note.Color.VIOLET -> R.color.color_violet
@@ -76,6 +75,8 @@ class NoteActivity : AppCompatActivity() {
             }
             toolbar.setBackgroundColor(resources.getColor(color))
         }
+        titleEt.addTextChangedListener(textChangeListener)
+        bodyEt.addTextChangedListener(textChangeListener)
     }
 
     private fun triggerSaveNote () {
