@@ -9,14 +9,13 @@ class MainViewModel : ViewModel() {
     private val viewStateLiveData: MutableLiveData<MainViewState> = MutableLiveData()
 
     init {
-//        Repository.getNotes().observeForever {
-//            viewStateLiveData.value =
-//                    viewStateLiveData.value?.copy(notes = it!!) ?: MainViewState(it!!)
-//
-//        }
-        viewStateLiveData.value = MainViewState(Repository.getNotes())
-    }
+        Repository.getNotes().observeForever {
+            viewStateLiveData.value =
+                    viewStateLiveData.value?.copy(notes = it!!) ?: MainViewState(it!!)
 
+        }
+    }
+        //viewStateLiveData.value = MainViewState(Repository.getNotes())
 
 
 

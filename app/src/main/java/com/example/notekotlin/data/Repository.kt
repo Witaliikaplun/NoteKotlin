@@ -42,13 +42,13 @@ object Repository {
         notesLiveData.value = notes
     }
 
-//    fun getNotes(): LiveData<List<Note>> {
-//        return notesLiveData
-//    }
-
-    fun getNotes(): List<Note> {
-        return notes
+    fun getNotes(): LiveData<List<Note>> {
+        return notesLiveData
     }
+
+//    fun getNotes(): List<Note> {
+//        return notes
+//    }
 
     fun saveNote(note: Note) {
         addOrReplace(note)
