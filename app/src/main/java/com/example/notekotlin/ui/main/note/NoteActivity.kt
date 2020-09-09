@@ -13,11 +13,12 @@ import com.example.notekotlin.R
 import com.example.notekotlin.data.model.Note
 import com.example.notekotlin.extensions.DATE_TIME_FORMAT
 import com.example.notekotlin.extensions.SAVE_DELAY
+import com.example.notekotlin.ui.base.BaseActivity
 import kotlinx.android.synthetic.main.activity_note.*
 import java.text.SimpleDateFormat
 import java.util.*
 
-class NoteActivity : AppCompatActivity() {
+class NoteActivity : BaseActivity<Note?, NoteViewState>() {
 
     companion object {
         private val EXTRA_NOTE = NoteActivity:: class.java.name + "extra.NOTE"
@@ -27,9 +28,10 @@ class NoteActivity : AppCompatActivity() {
             return intent
         }
     }
-    private var note: Note? = null
-    private lateinit var viewModel: NoteViewModel
-    private val textChangeListener = object : TextWatcher{
+
+    private val textChangeListener = object : TextWatcher{// создание ананимного экземпляра класса
+                                                          // реализующий интерфейс TextWather.
+                                                          //созданный таким образом объект не является синглтоном
         override fun afterTextChanged(p0: Editable?) {
             triggerSaveNote()
         }
@@ -43,20 +45,26 @@ class NoteActivity : AppCompatActivity() {
         }
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_note)
+    override val viewModel: NoteViewModel by lazy {
+        ViewModelProviders.of( this ). get (NoteViewModel:: class . java ) }
+    override val layoutRes: Int = R.layout.activity_note
+    private var note: Note? = null
 
-        viewModel = ViewModelProviders.of(this).get(NoteViewModel::class.java)
-        note = intent.getParcelableExtra(EXTRA_NOTE)
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super .onCreate(savedInstanceState)
+        val noteId = intent.getStringExtra(EXTRA_NOTE)
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled( true )
-        supportActionBar?.title = if (note != null ) {
-            SimpleDateFormat(DATE_TIME_FORMAT,
-                    Locale.getDefault()).format(note!!.lastChanged)
-        } else {
-            getString(R.string.new_note_title)
+        noteId?.let {
+            viewModel.loadNote(it)
         }
+        if (noteId == null ) supportActionBar?.title =
+                getString(R.string.new_note_title)
+        titleEt.addTextChangedListener(textChangeListener)
+        bodyEt.addTextChangedListener(textChangeListener)
+    }
+    override fun renderData ( data : Note ?) {
+        this .note = data
         initView()
     }
     private fun initView () {
@@ -80,14 +88,14 @@ class NoteActivity : AppCompatActivity() {
     }
 
     private fun triggerSaveNote () {
-        if (titleEt.text!!.length < 3 ) return
+        if (titleEt.text!!.length < 3) return
         Handler().postDelayed( object : Runnable {
             override fun run () {
                 note = note?.copy(title = titleEt.text.toString(),
                         note = bodyEt.text.toString(),
                         lastChanged = Date())
                         ?: createNewNote()
-                if (note != null ) viewModel.saveChanges(note!!)
+                if (note != null) viewModel.saveChanges(note!!)
             }
         }, SAVE_DELAY)
     }
