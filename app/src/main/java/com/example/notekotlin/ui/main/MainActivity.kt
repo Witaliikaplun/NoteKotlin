@@ -36,7 +36,7 @@ class MainActivity : BaseActivity<List<Note>?, MainViewState>() {
         adapter.notes = data
     }
     private fun openNoteScreen (note: Note?) {
-        val intent = NoteActivity.getStartIntent( this, note)
+        val intent = NoteActivity.getStartIntent( this, note?.id)
         startActivity(intent)
     }
 }

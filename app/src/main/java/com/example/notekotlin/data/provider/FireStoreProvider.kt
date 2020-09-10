@@ -14,7 +14,8 @@ import java.util.EventListener
 private const val  NOTES_COLLECTION = "notes"
 
 class FireStoreProvider : RemoteDataProvider {
-    private val TAG = " ${FireStoreProvider::class.java.simpleName} :"
+    //private val TAG = " ${FireStoreProvider::class.java.simpleName} :"
+    private val TAG = "ttt"
     private val db = FirebaseFirestore.getInstance()
     private val notesReference = db.collection(NOTES_COLLECTION)
 
