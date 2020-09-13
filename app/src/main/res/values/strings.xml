@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">NoteKotlin</string>
     <string name="new_note_title">Новая запись</string>
+    <string name="ok_bth_title">Ok</string>
 </resources>
