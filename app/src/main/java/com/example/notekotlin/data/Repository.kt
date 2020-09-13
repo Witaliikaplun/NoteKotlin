@@ -58,6 +58,8 @@ object Repository {
 
     fun getNoteById(id: String) = remoteProvider.getNoteById(id)
 
+    fun getCurrentUser () = remoteProvider.getCurrentUser()
+
 
 //    private fun addOrReplace(note: Note) {
 //        for (i in 0 until notes.size) {

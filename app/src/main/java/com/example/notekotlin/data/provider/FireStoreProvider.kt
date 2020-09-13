@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import com.example.notekotlin.data.errors.NoAuthException
 import com.example.notekotlin.data.model.Note
 import com.example.notekotlin.data.model.NoteResult
+import com.example.notekotlin.data.model.User
 import com.google.android.gms.tasks.OnFailureListener
 import com.google.android.gms.tasks.OnSuccessListener
 import com.google.firebase.auth.FirebaseAuth
@@ -75,5 +76,13 @@ class FireStoreProvider : RemoteDataProvider {
     private fun getUserNotesCollection() = currentUser?.let {
         db.collection(USERS_COLLECTION).document(it.uid).collection(NOTES_COLLECTION)
     } ?: throw NoAuthException()
+
+    override fun getCurrentUser(): LiveData<User?> =
+            MutableLiveData<User?>().apply {
+                value = currentUser?.let {
+                    User(it.displayName ?: "",
+                            it.email ?: "")
+                }
+            }
 }
 

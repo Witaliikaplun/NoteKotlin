@@ -1,5 +1,7 @@
 package com.example.notekotlin.ui.main
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.ViewModelProviders
@@ -40,5 +42,9 @@ class MainActivity : BaseActivity<List<Note>?, MainViewState>() {
     private fun openNoteScreen (note: Note?) {
         val intent = NoteActivity.getStartIntent( this, note?.id)
         startActivity(intent)
+    }
+    companion object {
+        fun getStartIntent(context: Context) = Intent(context,
+                MainActivity:: class . java )
     }
 }
