@@ -60,6 +60,8 @@ object Repository {
 
     fun getCurrentUser () = remoteProvider.getCurrentUser()
 
+    fun deleteNote (noteId: String ) = remoteProvider.deleteNote(noteId)
+
 
 //    private fun addOrReplace(note: Note) {
 //        for (i in 0 until notes.size) {

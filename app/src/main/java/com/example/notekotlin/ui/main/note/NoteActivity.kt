@@ -8,6 +8,8 @@ import android.os.Handler
 import android.provider.Settings.System.DATE_FORMAT
 import android.text.Editable
 import android.text.TextWatcher
+import android.view.Menu
+import android.view.MenuItem
 import androidx.lifecycle.ViewModelProviders
 import com.example.notekotlin.R
 import com.example.notekotlin.data.model.Note
@@ -18,18 +20,17 @@ import com.example.notekotlin.extensions.getColorInt
 import com.example.notekotlin.ui.base.BaseActivity
 import kotlinx.android.synthetic.main.activity_note.*
 import kotlinx.android.synthetic.main.item_note.*
+import org.jetbrains.anko.alert
+import org.jetbrains.anko.startActivity
 import java.text.SimpleDateFormat
 import java.util.*
 
-class NoteActivity : BaseActivity<Note?, NoteViewState>() {
+class NoteActivity : BaseActivity<NoteViewState.Data, NoteViewState>() {
 
     companion object {
-        private val EXTRA_NOTE = NoteActivity::class.java.name + "extra.NOTE"
-        fun getStartIntent(context: Context, note: String?): Intent {
-            val intent = Intent(context, NoteActivity::class.java)
-            intent.putExtra(EXTRA_NOTE, note)
-            return intent
-        }
+        private val EXTRA_NOTE = NoteActivity::class.java.name + " extra . NOTE "
+        fun start(context: Context, noteId: String?) =
+                context.startActivity<NoteActivity>(EXTRA_NOTE to noteId)
     }
 
     private val textChangeListener = object : TextWatcher {
@@ -69,35 +70,19 @@ class NoteActivity : BaseActivity<Note?, NoteViewState>() {
         bodyEt.addTextChangedListener(textChangeListener)
     }
 
-    override fun renderData(data: Note?) {
-        this.note = data
+    override fun renderData(data: NoteViewState.Data) {
+        if (data.isDeleted) finish()
+        this.note = data.note
+        //data.note?.let { color = it.color }
         initView()
     }
 
     private fun initView() {
-//        if (note != null) {
-//            titleEt.setText(note?.title ?: "")
-//            bodyEt.setText(note?.note ?: "")
-//
-//            val color = when (note!!.color) {
-//                Note.Color.WHITE -> R.color.color_white
-//                Note.Color.VIOLET -> R.color.color_violet
-//                Note.Color.YELLOW -> R.color.color_yello
-//                Note.Color.RED -> R.color.color_red
-//                Note.Color.PINK -> R.color.color_pink
-//                Note.Color.GREEN -> R.color.color_green
-//                Note.Color.BLUE -> R.color.color_blue
-//            }
-//            toolbar.setBackgroundColor(resources.getColor(color))
-//        }
-//        titleEt.addTextChangedListener(textChangeListener)
-//        bodyEt.addTextChangedListener(textChangeListener)
-
         note?.run {
             supportActionBar?.title = lastChanged.format()
             titleEt.setText(title)
             bodyEt.setText(body.text)//??? в методичке просто body
-            toolbar.setBackgroundColor(color.getColorInt( this@NoteActivity ))
+            toolbar.setBackgroundColor(color.getColorInt(this@NoteActivity))
         }
     }
 
@@ -117,4 +102,26 @@ class NoteActivity : BaseActivity<Note?, NoteViewState>() {
     private fun createNewNote(): Note = Note(UUID.randomUUID().toString(),
             titleEt.text.toString(),
             bodyEt.text.toString())
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean =
+            menuInflater.inflate(R.menu.note_menu, menu).let { true }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean = when (item.itemId) {
+        android.R.id.home -> super.onBackPressed().let { true }
+        R.id.palette -> togglePalette().let { true }
+        R.id.delete -> deleteNote().let { true }
+        else -> super.onOptionsItemSelected(item)
+    }
+
+    private fun togglePalette() {
+
+    }
+
+    private fun deleteNote() {
+        alert {
+            messageResource = R.string.delete_dialog_message
+            negativeButton(R.string.cancel_btn_title) { dialog -> dialog.dismiss() }
+            positiveButton(R.string.ok_bth_title) { viewModel.deleteNote() }
+        }.show()
+    }
 }

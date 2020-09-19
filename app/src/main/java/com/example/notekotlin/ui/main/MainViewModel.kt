@@ -1,23 +1,20 @@
 package com.example.notekotlin.ui.main
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModel
 import com.example.notekotlin.data.Repository
 import com.example.notekotlin.data.model.Note
-import com.example.notekotlin.data.model.NoteResult
+import com.example.notekotlin.data.model.Result
 import com.example.notekotlin.ui.base.BaseViewModel
-import com.example.notekotlin.data.model.NoteResult.Error
+import com.example.notekotlin.data.model.Result.Error
 
 class MainViewModel ( val repository: Repository = Repository) :
         BaseViewModel<List<Note>?, MainViewState>() {
-    private val notesObserver = object : Observer<NoteResult> {//Стандартный
+    private val notesObserver = object : Observer<Result> {//Стандартный
 
-        override fun onChanged (t: NoteResult ?) {
+        override fun onChanged (t: Result?) {
             if (t == null ) return
             when (t) {
-                is NoteResult.Success<*> -> {
+                is com.example.notekotlin.data.model.NoteResult.Result.Success<*> -> {
 // Может понадобиться вручную импортировать класс data.model.NoteResult.Success
                     viewStateLiveData.value = MainViewState(notes = t.data as? List<Note>)
                 }
