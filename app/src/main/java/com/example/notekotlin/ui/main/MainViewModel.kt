@@ -14,7 +14,7 @@ class MainViewModel ( val repository: Repository = Repository) :
         override fun onChanged (t: Result?) {
             if (t == null ) return
             when (t) {
-                is com.example.notekotlin.data.model.NoteResult.Result.Success<*> -> {
+                is com.example.notekotlin.data.model.Result.Success<*> -> {
 // Может понадобиться вручную импортировать класс data.model.NoteResult.Success
                     viewStateLiveData.value = MainViewState(notes = t.data as? List<Note>)
                 }

@@ -4,7 +4,7 @@ import android.os.Handler
 import androidx.lifecycle.ViewModelProviders
 import com.example.notekotlin.ui.base.BaseActivity
 import com.example.notekotlin.ui.main.MainActivity
-import com.example.notekotlin.ui.main.note.NoteActivity.Companion.getStartIntent
+
 
 private const val START_DELAY = 1000L
 
