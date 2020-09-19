@@ -2,6 +2,7 @@ package com.example.notekotlin.ui.main.note
 
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
@@ -55,6 +56,7 @@ class NoteActivity : BaseActivity<NoteViewState.Data, NoteViewState>() {
     }
     override val layoutRes: Int = R.layout.activity_note
     private var note: Note? = null
+    private var color: Note.Color = Note.Color.WHITE
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -68,34 +70,41 @@ class NoteActivity : BaseActivity<NoteViewState.Data, NoteViewState>() {
                 getString(R.string.new_note_title)
         titleEt.addTextChangedListener(textChangeListener)
         bodyEt.addTextChangedListener(textChangeListener)
+
+        colorPicker.onColorClickListener = {
+            color = it
+            toolbar.setBackgroundColor(note!!.color.getColorInt(this))
+            triggerSaveNote()
+        }
     }
 
     override fun renderData(data: NoteViewState.Data) {
         if (data.isDeleted) finish()
         this.note = data.note
-        //data.note?.let { color = it.color }
+        data.note?.let { color = it.color }
         initView()
     }
 
     private fun initView() {
         note?.run {
             supportActionBar?.title = lastChanged.format()
+            removeEditListener()
             titleEt.setText(title)
             bodyEt.setText(body.text)//??? в методичке просто body
             toolbar.setBackgroundColor(color.getColorInt(this@NoteActivity))
+            setEditListener()
         }
     }
 
     private fun triggerSaveNote() {
-        if (titleEt.text!!.length < 3) return
-        Handler().postDelayed(object : Runnable {
-            override fun run() {
-                note = note?.copy(title = titleEt.text.toString(),
-                        note = bodyEt.text.toString(),
-                        lastChanged = Date())
-                        ?: createNewNote()
-                if (note != null) viewModel.saveChanges(note!!)
-            }
+        if (titleEt.text!!.length < 3 && bodyEt.text.length < 3) return
+        Handler().postDelayed({
+            note = note?.copy(title = titleEt.text.toString(),
+                    note = bodyEt.text.toString(),
+                    lastChanged = Date(),
+                    color = note!!.color)
+                    ?: createNewNote()
+            note?.let { viewModel.saveChanges(it) }
         }, SAVE_DELAY)
     }
 
@@ -114,7 +123,11 @@ class NoteActivity : BaseActivity<NoteViewState.Data, NoteViewState>() {
     }
 
     private fun togglePalette() {
-
+        if (colorPicker.isOpen) {
+            colorPicker.close()
+        } else {
+            colorPicker.open()
+        }
     }
 
     private fun deleteNote() {
@@ -124,4 +137,28 @@ class NoteActivity : BaseActivity<NoteViewState.Data, NoteViewState>() {
             positiveButton(R.string.ok_bth_title) { viewModel.deleteNote() }
         }.show()
     }
+
+    private fun setEditListener() {
+        titleEt.addTextChangedListener(textChangeListener)
+        bodyEt.addTextChangedListener(textChangeListener)
+    }
+
+    private fun removeEditListener() {
+        titleEt.removeTextChangedListener(textChangeListener)
+        bodyEt.removeTextChangedListener(textChangeListener)
+    }
+
+    private fun setToolbarColor(color: Color) {
+        toolbar.setBackgroundColor(note!!.color.getColorInt(this))
+    }
+
+    override fun onBackPressed() {
+        if (colorPicker.isOpen) {
+            colorPicker.close()
+            return
+        }
+        super.onBackPressed()
+    }
+
+
 }

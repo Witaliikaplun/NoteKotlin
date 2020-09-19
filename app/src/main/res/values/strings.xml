@@ -11,4 +11,5 @@
     <string name="delete_menu_title">Удалить</string>
     <string name="change_color_menu_title">Изменить цвет</string>
     <string name="delete_dialog_message">Вы уверены?</string>
+    <string name="title">Note App</string>
 </resources>

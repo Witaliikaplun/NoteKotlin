@@ -9,15 +9,13 @@ import com.example.notekotlin.data.model.Result.Error
 
 class NoteViewModel(val repository: Repository = Repository) :
         BaseViewModel<NoteViewState.Data, NoteViewState>() {
-    private var pendingNote: Note? = null
-    fun saveChanges(note: Note) {
-        pendingNote = note
-    }
 
-    override fun onCleared() {
-        if (pendingNote != null) {
-            repository.saveNote(pendingNote!!)
-        }
+
+    fun saveChanges (note: Note ) {
+        viewStateLiveData.value = NoteViewState(NoteViewState.Data(note = note))
+    }
+    override fun onCleared () {
+        currentNote?.let { repository.saveNote(it) }
     }
 
     fun loadNote(noteId: String) {
