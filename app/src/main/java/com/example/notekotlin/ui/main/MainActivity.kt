@@ -19,12 +19,11 @@ import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import kotlinx.android.synthetic.main.activity_main.*
 import org.jetbrains.anko.alert
+import org.koin.android.viewmodel.ext.android.viewModel
 import java.util.*
 
 class MainActivity : BaseActivity<List<Note>?, MainViewState>() {
-    override val viewModel: MainViewModel by lazy {
-        ViewModelProviders.of(this).get(MainViewModel::class.java)
-    }
+    override val viewModel: MainViewModel by viewModel()
     override val layoutRes: Int = R.layout.activity_main
     private lateinit var adapter: MainAdapter
 

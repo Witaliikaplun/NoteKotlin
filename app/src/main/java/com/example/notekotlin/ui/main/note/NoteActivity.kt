@@ -23,6 +23,7 @@ import kotlinx.android.synthetic.main.activity_note.*
 import kotlinx.android.synthetic.main.item_note.*
 import org.jetbrains.anko.alert
 import org.jetbrains.anko.startActivity
+import org.koin.android.viewmodel.ext.android.viewModel
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -51,9 +52,7 @@ class NoteActivity : BaseActivity<NoteViewState.Data, NoteViewState>() {
         }
     }
 
-    override val viewModel: NoteViewModel by lazy {
-        ViewModelProviders.of(this).get(NoteViewModel::class.java)
-    }
+    override val viewModel: NoteViewModel by viewModel()
     override val layoutRes: Int = R.layout.activity_note
     private var note: Note? = null
     private var color: Note.Color = Note.Color.WHITE
