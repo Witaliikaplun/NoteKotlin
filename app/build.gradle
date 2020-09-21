@@ -65,6 +65,9 @@ dependencies {
 
     implementation "org.jetbrains.anko:anko-commons:0.10.7"
 
+    testImplementation 'android.arch.core:core-testing:1.1.1'
+    testImplementation "io.mockk:mockk:1.8.9"
+
 }
 apply plugin: 'com.google.gms.google-services'
 repositories {
