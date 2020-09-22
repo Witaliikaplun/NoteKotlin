@@ -8,7 +8,7 @@ import com.example.notekotlin.data.model.Result
 import com.example.notekotlin.ui.base.BaseViewModel
 import com.example.notekotlin.data.model.Result.Error
 
-class MainViewModel ( val repository: Repository = Repository) :
+class MainViewModel ( val repository: Repository) :
         BaseViewModel<List<Note>?, MainViewState>() {
     private val notesObserver = object : Observer<Result> {//Стандартный
 

@@ -7,7 +7,7 @@ import com.example.notekotlin.data.model.Result
 import com.example.notekotlin.ui.base.BaseViewModel
 import com.example.notekotlin.data.model.Result.Error
 
-class NoteViewModel(val repository: Repository = Repository) :
+class NoteViewModel(val repository: Repository) :
         BaseViewModel<NoteViewState.Data, NoteViewState>() {
 
 
