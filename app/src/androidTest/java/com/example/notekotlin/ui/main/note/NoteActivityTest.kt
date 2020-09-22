@@ -9,6 +9,7 @@ import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.action.ViewActions.typeText
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.*
+import androidx.test.rule.ActivityTestRule
 import com.example.notekotlin.R
 import com.example.notekotlin.data.model.Note
 import com.example.notekotlin.extensions.getColorInt
