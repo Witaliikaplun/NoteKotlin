@@ -32,7 +32,7 @@ class FireStoreProviderTest {
     private val mockDocument3 = mockk<DocumentSnapshot>()
     private val testNotes = listOf(Note(id = "1"), Note(id = "2"), Note(id =
     "3"))
-    private val provider: FireStoreProvider = FireStoreProvider(mockAuth, mockDb)
+    private val provider: FireStoreProvider = FireStoreProvider(mockDb, mockAuth)
 
     @Before
     fun setUp() {
