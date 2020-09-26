@@ -1,7 +1,6 @@
 package com.example.notekotlin.ui.main.note
 
 import android.content.Context
-import android.content.Intent
 import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -54,7 +53,7 @@ class NoteActivity : BaseActivity<NoteData>() {
         }
     }
 
-    override val viewModel: NoteViewModel by viewModel()
+    override val model: NoteViewModel by viewModel()
     override val layoutRes: Int = R.layout.activity_note
     private var note: Note? = null
     private var color: Note.Color = Note.Color.WHITE
@@ -65,7 +64,7 @@ class NoteActivity : BaseActivity<NoteData>() {
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         noteId?.let {
-            viewModel.loadNote(it)
+            model.loadNote(it)
         }
         if (noteId == null) supportActionBar?.title =
                 getString(R.string.new_note_title)
@@ -79,7 +78,7 @@ class NoteActivity : BaseActivity<NoteData>() {
         }
     }
 
-    override fun renderData(data: NoteViewState.Data) {
+    override fun renderData(data: NoteData) {
         if (data.isDeleted) finish()
         this.note = data.note
         data.note?.let { color = it.color }
@@ -136,7 +135,7 @@ class NoteActivity : BaseActivity<NoteData>() {
         alert {
             messageResource = R.string.delete_dialog_message
             negativeButton(R.string.cancel_btn_title) { dialog -> dialog.dismiss() }
-            positiveButton(R.string.ok_bth_title) { viewModel.deleteNote() }
+            positiveButton(R.string.ok_bth_title) { model.deleteNote() }
         }.show()
     }
 
