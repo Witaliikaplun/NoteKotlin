@@ -21,6 +21,7 @@ import com.example.notekotlin.extensions.getColorInt
 import com.example.notekotlin.ui.base.BaseActivity
 import kotlinx.android.synthetic.main.activity_note.*
 import kotlinx.android.synthetic.main.item_note.*
+import kotlinx.coroutines.delay
 import org.jetbrains.anko.alert
 import org.jetbrains.anko.startActivity
 import org.koin.android.viewmodel.ext.android.viewModel
@@ -95,16 +96,17 @@ class NoteActivity : BaseActivity<NoteViewState.Data, NoteViewState>() {
         }
     }
 
-    private fun triggerSaveNote() {
-        if (titleEt.text!!.length < 3 && bodyEt.text.length < 3) return
-        Handler().postDelayed({
+    private fun triggerSaveNote () {
+        if (titleEt.text.length < 3 && bodyEt.text.length < 3 ) return
+        launch {
+            delay(SAVE_DELAY)
             note = note?.copy(title = titleEt.text.toString(),
-                    note = bodyEt.text.toString(),
+                    note = note.text.toString(),
                     lastChanged = Date(),
-                    color = note!!.color)
+                    color = color)
                     ?: createNewNote()
-            note?.let { viewModel.saveChanges(it) }
-        }, SAVE_DELAY)
+            note?.let { model.saveChanges(it) }
+        }
     }
 
     private fun createNewNote(): Note = Note(UUID.randomUUID().toString(),

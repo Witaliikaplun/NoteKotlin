@@ -7,33 +7,25 @@ import com.example.notekotlin.data.model.Note
 import com.example.notekotlin.data.model.Result
 import com.example.notekotlin.ui.base.BaseViewModel
 import com.example.notekotlin.data.model.Result.Error
+import kotlinx.coroutines.launch
 
-class MainViewModel ( val repository: Repository) :
-        BaseViewModel<List<Note>?, MainViewState>() {
-    private val notesObserver = object : Observer<Result> {//Стандартный
+class MainViewModel(repository: Repository) :
+        BaseViewModel<List<Note>?>() {
+    private val notesChannel = repository.getNotes()
 
-        override fun onChanged (t: Result?) {
-            if (t == null ) return
-            when (t) {
-                is com.example.notekotlin.data.model.Result.Success<*> -> {
-// Может понадобиться вручную импортировать класс data.model.NoteResult.Success
-                    viewStateLiveData.value = MainViewState(notes = t.data as? List<Note>)
-                }
-                is Error -> {
-// Может понадобиться вручную импортировать класс data.model.NoteResult.Error
-                    viewStateLiveData.value = MainViewState(error = t.error)
+    init {
+        launch {
+            notesChannel.consumeEach {
+                when (it) {
+                    is Result.Success<*> -> setData(it.data as? List<Note>)
+                    is Error -> setError(it.error)
                 }
             }
         }
     }
-    private val repositoryNotes = repository.getNotes()
-    init {
-        viewStateLiveData.value = MainViewState()
-        repositoryNotes.observeForever(notesObserver)
-    }
 
-    @VisibleForTesting
-    public override fun onCleared () {
-        repositoryNotes.removeObserver(notesObserver)
+    override fun onCleared() {
+        notesChannel.cancel()
+        super.onCleared()
     }
 }
