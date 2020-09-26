@@ -7,7 +7,9 @@ import com.example.notekotlin.data.model.Note
 import com.example.notekotlin.data.model.Result
 import com.example.notekotlin.ui.base.BaseViewModel
 import com.example.notekotlin.data.model.Result.Error
+import kotlinx.coroutines.channels.consumeEach
 import kotlinx.coroutines.launch
+
 
 class MainViewModel(repository: Repository) :
         BaseViewModel<List<Note>?>() {

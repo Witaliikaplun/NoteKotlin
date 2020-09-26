@@ -60,7 +60,7 @@ class FireStoreProvider(val store: FirebaseFirestore, val auth: FirebaseAuth) : 
                 invokeOnClose { registration?.remove() }
             }
 
-    override suspend fun getNoteById(id: String): Note =
+    override suspend  fun getNoteById(id: String): Note =
             suspendCoroutine { continuation ->
                 try {
                     userNotesCollection.document(id).get()
