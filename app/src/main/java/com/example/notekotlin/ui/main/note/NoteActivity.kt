@@ -22,13 +22,14 @@ import com.example.notekotlin.ui.base.BaseActivity
 import kotlinx.android.synthetic.main.activity_note.*
 import kotlinx.android.synthetic.main.item_note.*
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.jetbrains.anko.alert
 import org.jetbrains.anko.startActivity
 import org.koin.android.viewmodel.ext.android.viewModel
 import java.text.SimpleDateFormat
 import java.util.*
 
-class NoteActivity : BaseActivity<NoteViewState.Data, NoteViewState>() {
+class NoteActivity : BaseActivity<NoteData>() {
 
     companion object {
         private val EXTRA_NOTE = NoteActivity::class.java.name + " extra . NOTE "
@@ -97,11 +98,11 @@ class NoteActivity : BaseActivity<NoteViewState.Data, NoteViewState>() {
     }
 
     private fun triggerSaveNote () {
-        if (titleEt.text.length < 3 && bodyEt.text.length < 3 ) return
+        if (titleEt.text!!.length < 3 && bodyEt.text.length < 3 ) return
         launch {
             delay(SAVE_DELAY)
             note = note?.copy(title = titleEt.text.toString(),
-                    note = note.text.toString(),
+                    note = bodyEt.text.toString(),
                     lastChanged = Date(),
                     color = color)
                     ?: createNewNote()
